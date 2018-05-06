@@ -72,5 +72,5 @@
 A `result.txt` file should be generated
 
 # Documentation 
-An html javadoc can be found in the /javadoc folder
+An html javadoc can be found in the /doc folder
 
