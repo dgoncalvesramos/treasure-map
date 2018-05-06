@@ -1,0 +1,65 @@
+C - 58 - 20 
+M - 1 - 0
+M - 2 - 1
+T - 0 - 3 - 2
+T - 1 - 3 - 3
+T - 0 - 4 - 2
+T - 1 - 5 - 3
+T - 0 - 6 - 2
+T - 1 - 7 - 3
+T - 0 - 8 - 2
+T - 1 - 9 - 3
+T - 0 - 10 - 2
+T - 1 - 11 - 3
+T - 0 - 12 - 2
+T - 1 - 13 - 3
+T - 0 - 14 - 2
+T - 1 - 15 - 3
+T - 0 - 16 - 2
+T - 1 - 17 - 3
+T - 0 - 18 - 2
+T - 1 - 19 - 3
+T - 1 -	10 - 2
+T - 1 - 12 - 2
+T - 1 - 14 - 3
+T - 4 - 15 - 2
+T - 1 - 16 - 3
+T - 4 - 17 - 2
+T - 1 - 18 - 3
+T - 4 - 19 - 2
+T - 2 - 10- 3
+T - 2 - 11 - 2
+T - 2 - 13 - 3
+T - 2 - 14 - 2
+T - 2 - 15 - 3
+T - 2 - 16 - 2
+T - 2 - 17 - 3
+T - 3 - 10 - 2
+T - 3 - 11 - 3
+T - 3 - 12 - 2
+T - 3 - 13 - 3
+T - 3 - 14 - 2
+T - 3 - 15 - 3
+T - 3 - 16 - 2
+T - 3 - 17 - 3
+T - 3 - 18 - 2
+T - 2 - 0 - 5
+A - A - 1 - 1 - S - AADADAGGA
+A - B - 1 - 4 - S - AADADAGGA
+A - C - 5 - 10 - S - AADADAGGA
+A - D - 2 - 6 - S - AADADAGGA
+A - E - 10 - 1 - S - AADADAGGA
+A - F - 10 - 2 - S - AADADAGGA
+A - G - 13 - 1 - S - AADADAGGA
+A - H - 14 - 1 - S - AADADAGGA
+A - I - 12 - 2 - S - AADADAGGA
+A - J - 18 - 2 - S - AADADAGGA
+A - K - 11 - 2 - S - AADADAGGA
+A - L - 11 - 11 - S - AADADADGA
+A - M - 8 - 2 - S - AADADAGGDDA
+A - N - 9 - 19 - S - AADADAGGAAA
+A - O - 25 - 19 - S - AADAGGDAGGA
+A - P - 23 - 19 - S - AADADAAGGA
+A - Q - 56 - 19 - S - AADADAGGGA
+A - R - 3 - 7 - S - AADADAGGA
+A - S - 11 - 19 - S - AADADAGGA
