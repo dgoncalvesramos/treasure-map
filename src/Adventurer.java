@@ -41,10 +41,14 @@ public class Adventurer extends AbstractGameElement {
 		else
 			return movements.remove(0);
 	}
+	
+	public boolean StillMovements(){
+		return (!movements.isEmpty());
+	}
 
 	@Override
 	public String toString() {
-		return "A - " + name.trim() + super.toString() + " - " + this.getDirection().getDirection() + " - "
+		return "A - " + name.trim() + super.toString() + " - " + direction.getDirectionValue() + " - "
 				+ this.nbTreasuresCollected;
 	}
 }

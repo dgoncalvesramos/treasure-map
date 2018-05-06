@@ -97,7 +97,7 @@ public class GameElementBuilder implements GameElementCheckers {
 
 		/* check if the direction provided is valid (in Direction enum) */
 		for (Direction d : Direction.values()) {
-			if (d.getDirection() == aSplitLine[4].trim().toUpperCase().charAt(0))
+			if (d.getDirectionValue() == aSplitLine[4].trim().toUpperCase().charAt(0))
 				direction = d;
 		}
 		if (direction == null)

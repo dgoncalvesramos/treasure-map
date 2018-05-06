@@ -24,8 +24,8 @@ public class Map {
 	}
 
 	public void removeGameElement(AbstractGameElement gameElement) {
-		// FIX - prevent removing treasure and mountains from the map
-		if (!(gameElement instanceof Treasure) && !(gameElement instanceof Mountain))
+		// prevent removing treasure from the map
+		if (!(gameElement instanceof Treasure))
 			tabGameElements[gameElement.getYPosFromCoord()][gameElement.getXPosFromCoord()] = null;
 	}
 
@@ -71,11 +71,12 @@ public class Map {
 						m += tabGameElements[i][j].toString() + "\n";
 					else if (tabGameElements[i][j].toString().startsWith("T"))
 						t += tabGameElements[i][j].toString() + "\n";
-					else
-						a += tabGameElements[i][j].toString() + "\n";
 				}
 			}
 		}
+		for (Adventurer adventurer : adventurers)
+			a += adventurer.toString() + "\n";
+
 		return "C - " + this.getWidth() + " - " + this.getHeight() + "\n" + res.concat(m).concat(t).concat(a);
 	}
 }

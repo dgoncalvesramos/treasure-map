@@ -61,8 +61,6 @@ public class MapBuilder implements MapCheckers {
 					Adventurer adventurer = gameElementBuilder.checkAndBuildAdventurer(text, cptLine, fileArray,
 							gameMap.getWidth(), gameMap.getHeight());
 					checkIfElementCanBeInsertedAndUpdateMap(gameMap, adventurer, cptLine, text);
-
-					// FIX - we need a list of the adventurers to know the priority while walking
 					gameMap.addAdventurerToList(adventurer);
 				} else if (cptLine > 1 && fileArray[0].trim().equalsIgnoreCase("t")) {
 					Treasure treasure = gameElementBuilder.checkAndBuildTreasure(text, cptLine, fileArray,

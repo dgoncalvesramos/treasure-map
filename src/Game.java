@@ -3,9 +3,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 public class Game {
 	private Map map;
@@ -15,29 +12,27 @@ public class Game {
 	}
 
 	public void play() {
-		boolean finished = false;
 		ArrayList<Adventurer> adventurers = map.getAdventurers();
 
 		if (!adventurers.isEmpty()) {
-			ExecutorService es = Executors.newCachedThreadPool();
+			int len = adventurers.size();
+			int i = 0;
 
-			for (Adventurer adventurer : adventurers) {
-				es.execute(() -> makeAdventurersWalk(adventurer));
+			while (i < len) {
+				Adventurer adventurer = adventurers.get(i);
+				makeAdventurerWalk(adventurer);
+				i++;
+				if (i == len) {
+					for (int j = 0; j < adventurers.size(); j++) {
+						if (adventurers.get(j).StillMovements()) {
+							i = j;
+							break;
+						}
+					}
+				}
 			}
-
-			es.shutdown();
-			try {
-				// must complete in less than one minute
-				finished = es.awaitTermination(1, TimeUnit.MINUTES);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			if (finished)
-				writeResult();
-			else
-				System.out.println("Error not all tasks have been finished, result file might be corrupted !");
+			writeResult();
 		}
-
 		// no adventurers in the game
 		else {
 			writeResult();
@@ -64,151 +59,128 @@ public class Game {
 		}
 	}
 
-	private synchronized void makeAdventurersWalk(Adventurer adventurer) {
-		Movement curMov;
+	private void moveAventurerToNextPosition(Adventurer adventurer, int prevX, int prevY, int nextX, int nextY) {
 		AbstractGameElement gameElemAtNextPos, gameElementAtPrevPos;
-		int nextX, nextY;
 
-		while ((curMov = adventurer.walk()) != null) {
+		// Get the game element at the position where we want to move the adventurer
+		gameElemAtNextPos = map.getElement(new Coordinates(nextX, nextY));
 
-			// if adventurer walk
-			if (curMov == Movement.WALK) {
-				Coordinates coordAdventurer = adventurer.getCoord();
+		// Get the game element at the current position that we want to remove if it is
+		// the adventurer and not a treasure
+		gameElementAtPrevPos = map.getElement(new Coordinates(prevX, prevY));
 
-				switch (adventurer.getDirection()) {
-				case NORTH:
-					// check if next move is in the map
-					if ((nextY = coordAdventurer.getY() - 1) >= 0) {
+		// Move the adventurer to position if it is a plain element ->
+		// map.getElement==null
+		if (gameElemAtNextPos == null) {
 
-						// Get the game element at the position where we want to move the adventurer
-						gameElemAtNextPos = map.getElement(new Coordinates(coordAdventurer.getX(), nextY));
+			// check if adventurer was on a treasure at last position and unset flag
+			if (gameElementAtPrevPos instanceof Treasure)
+				((Treasure) gameElementAtPrevPos).unsetAdventurerOnPos();
 
-						// Get the game element at the current position that we want to remove if it is
-						// the adventurer
-						gameElementAtPrevPos = map
-								.getElement(new Coordinates(coordAdventurer.getX(), coordAdventurer.getY()));
+			// remove the element at the previous position
+			map.removeGameElement(gameElementAtPrevPos);
 
-						// Move adventurer if plain element -> map.getElement==null
-						if (gameElemAtNextPos == null) {
-							map.removeGameElement(gameElementAtPrevPos);
-							adventurer.setYCoord(nextY);
-							map.addGameElement(adventurer);
-						}
-						// Move adventurer and collect treasure
-						else if (gameElemAtNextPos instanceof Treasure) {
-							map.removeGameElement(gameElementAtPrevPos);
-							adventurer.setYCoord(nextY);
-							adventurer.collectTreasure();
+			// update the coordinates of the adventurer
+			adventurer.setXCoord(nextX);
+			adventurer.setYCoord(nextY);
 
-							// remove treasure from tab if there is no more to collect
-							if (((Treasure) gameElemAtNextPos).collectTreasure() == 0) {
-								map.removeTreasure((Treasure) gameElemAtNextPos);
-								map.addGameElement(adventurer);
-							}
-						}
-					}
-					break;
+			// add the adventurer at new position
+			map.addGameElement(adventurer);
+		}
+		// Move the adventurer to position if it is a treasure and if there is no other
+		// adventurers at this position
+		else if (gameElemAtNextPos instanceof Treasure && !((Treasure) gameElemAtNextPos).isAdventurerOnPos()) {
+			// set a flag to tell to the other adventurers an adventurer is already at the
+			// position of this treasure
+			((Treasure) gameElemAtNextPos).setAdventurerOnPos();
+			map.removeGameElement(gameElementAtPrevPos);
 
-				case SOUTH:
-					if ((nextY = coordAdventurer.getY() + 1) < map.getHeight()) {
-						gameElemAtNextPos = map.getElement(new Coordinates(coordAdventurer.getX(), nextY));
-						gameElementAtPrevPos = map
-								.getElement(new Coordinates(coordAdventurer.getX(), coordAdventurer.getY()));
+			// update the coordinates of the adventurer
+			adventurer.setXCoord(nextX);
+			adventurer.setYCoord(nextY);
 
-						if (gameElemAtNextPos == null) {
-							map.removeGameElement(gameElementAtPrevPos);
-							adventurer.setYCoord(nextY);
-							map.addGameElement(adventurer);
-						} else if (gameElemAtNextPos instanceof Treasure) {
-							map.removeGameElement(gameElementAtPrevPos);
-							adventurer.setYCoord(nextY);
-							adventurer.collectTreasure();
+			// collect treasure
+			adventurer.collectTreasure();
 
-							if (((Treasure) gameElemAtNextPos).collectTreasure() == 0) {
-								map.removeTreasure((Treasure) gameElemAtNextPos);
-								map.addGameElement(adventurer);
-							}
-						}
-					}
-					break;
-
-				case EAST:
-					if ((nextX = coordAdventurer.getX() - 1) >= 0) {
-						gameElemAtNextPos = map.getElement(new Coordinates(nextX, coordAdventurer.getY()));
-						gameElementAtPrevPos = map
-								.getElement(new Coordinates(coordAdventurer.getX(), coordAdventurer.getY()));
-
-						if (gameElemAtNextPos == null) {
-							map.removeGameElement(gameElementAtPrevPos);
-							adventurer.setXCoord(nextX);
-							map.addGameElement(adventurer);
-						} else if (gameElemAtNextPos instanceof Treasure) {
-							map.removeGameElement(gameElementAtPrevPos);
-							adventurer.setXCoord(nextX);
-							adventurer.collectTreasure();
-
-							if (((Treasure) gameElemAtNextPos).collectTreasure() == 0) {
-								map.removeTreasure((Treasure) gameElemAtNextPos);
-								map.addGameElement(adventurer);
-							}
-						}
-						break;
-					}
-
-				case WEST:
-					if ((nextX = coordAdventurer.getX() + 1) < map.getWidth()) {
-						gameElemAtNextPos = map.getElement(new Coordinates(nextX, coordAdventurer.getY()));
-						gameElementAtPrevPos = map
-								.getElement(new Coordinates(coordAdventurer.getX(), coordAdventurer.getY()));
-
-						if (gameElemAtNextPos == null) {
-							map.removeGameElement(gameElementAtPrevPos);
-							adventurer.setXCoord(nextX);
-							map.addGameElement(adventurer);
-						} else if (gameElemAtNextPos instanceof Treasure) {
-							map.removeGameElement(gameElementAtPrevPos);
-							adventurer.setXCoord(coordAdventurer.getX() + 1);
-							adventurer.collectTreasure();
-
-							if (((Treasure) gameElemAtNextPos).collectTreasure() == 0) {
-								map.removeTreasure((Treasure) gameElemAtNextPos);
-								map.addGameElement(adventurer);
-							}
-						}
-						break;
-					}
-				}
-			} else if (curMov == Movement.RIGHT) {
-				switch (adventurer.getDirection()) {
-				case NORTH:
-					adventurer.setDirection(Direction.WEST);
-					break;
-				case SOUTH:
-					adventurer.setDirection(Direction.EAST);
-					break;
-				case EAST:
-					adventurer.setDirection(Direction.NORTH);
-					break;
-				case WEST:
-					adventurer.setDirection(Direction.SOUTH);
-					break;
-				}
-			} else if (curMov == Movement.LEFT) {
-				switch (adventurer.getDirection()) {
-				case NORTH:
-					adventurer.setDirection(Direction.EAST);
-					break;
-				case SOUTH:
-					adventurer.setDirection(Direction.WEST);
-					break;
-				case EAST:
-					adventurer.setDirection(Direction.SOUTH);
-					break;
-				case WEST:
-					adventurer.setDirection(Direction.NORTH);
-					break;
-				}
+			// remove treasure from tab if there is no more to collect and add adventurer at
+			// this position
+			if (((Treasure) gameElemAtNextPos).collectTreasure() == 0) {
+				map.removeTreasure((Treasure) gameElemAtNextPos);
+				map.addGameElement(adventurer);
 			}
+		}
+	}
+
+	private void switchDirectionOfAventurer(Adventurer adventurer, Movement curMov) {
+		if (curMov == Movement.RIGHT) {
+			switch (adventurer.getDirection()) {
+			case NORTH:
+				adventurer.setDirection(Direction.WEST);
+				break;
+			case SOUTH:
+				adventurer.setDirection(Direction.EAST);
+				break;
+			case EAST:
+				adventurer.setDirection(Direction.NORTH);
+				break;
+			case WEST:
+				adventurer.setDirection(Direction.SOUTH);
+				break;
+			}
+		} else {
+			switch (adventurer.getDirection()) {
+			case NORTH:
+				adventurer.setDirection(Direction.EAST);
+				break;
+			case SOUTH:
+				adventurer.setDirection(Direction.WEST);
+				break;
+			case EAST:
+				adventurer.setDirection(Direction.SOUTH);
+				break;
+			case WEST:
+				adventurer.setDirection(Direction.NORTH);
+				break;
+			}
+		}
+	}
+
+	private void makeAdventurerWalk(Adventurer adventurer) {
+		Movement curMov;
+		int posX, posY;
+
+		if ((curMov = adventurer.walk()) == null)
+			return;
+
+		// if adventurer walk
+		if (curMov == Movement.WALK) {
+			posX = adventurer.getXPosFromCoord();
+			posY = adventurer.getYPosFromCoord();
+
+			switch (adventurer.getDirection()) {
+			case NORTH:
+				// check if next move is in the map
+				if (posY - 1 >= 0)
+					moveAventurerToNextPosition(adventurer, posX, posY, posX, posY - 1);
+				break;
+
+			case SOUTH:
+				if (posY + 1 < map.getHeight())
+					moveAventurerToNextPosition(adventurer, posX, posY, posX, posY + 1);
+				break;
+
+			case EAST:
+				if (posX - 1 >= 0)
+					moveAventurerToNextPosition(adventurer, posX, posY, posX - 1, posY);
+				break;
+
+			case WEST:
+				if (posX + 1 < map.getWidth())
+					moveAventurerToNextPosition(adventurer, posX, posY, posX + 1, posY);
+				break;
+			}
+		} else {
+			switchDirectionOfAventurer(adventurer, curMov);
 		}
 	}
 }

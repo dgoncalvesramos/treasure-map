@@ -7,7 +7,7 @@ public enum Direction {
 		this.value = value;
 	}
 
-	public char getDirection() {
+	public char getDirectionValue() {
 		return value;
 	}
 }
