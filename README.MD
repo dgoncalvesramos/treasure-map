@@ -5,8 +5,8 @@
 `$ javac Main` in the src/ folder
 
 # Usage
-`$ java Main input_file` in the bin/ folder
-	EX : `$ java Main ../testFiles/testA`
+`$ java Main input_file` in the bin/ folder <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;EX : `$ java Main ../testFiles/testA`
 
 A `result.txt` file should be generated
 
