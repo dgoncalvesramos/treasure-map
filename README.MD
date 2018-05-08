@@ -18,13 +18,13 @@
  **A - {name}  - {posX} - {posY} - {Direction} - {Movement sequence}**
 	
    indicates that we define an adventurer at the coordinates **{posX}** - **{posY}** with the start **{direction}**
-     and the movement sequence **{Movement sequence}**
+   and the movement sequence **{Movement sequence}**
  
 # Rules of the game
  Adventurers walk each turn following the movement sequence :
 
  - **A** walk to the next position at the direction **{direction}** 
- - **D** turn right (switch the adventurer **{direction}**
+ - **D** turn right (switch the adventurer **{direction}**)
  - **G** turn left (switch the adventurer **{direction}**)
 
  The directions are the following :
@@ -34,7 +34,7 @@
  - **S** South
  - **E** East
 
- When an adventurer stops at a position of a treasure, he collects it.
+ When an adventurer stops at a position of a treasure he collects it.
  Two adventurers can't be at the same position 
  The game ends when all the adventures have walk all of their **{movement sequence}** 
 
