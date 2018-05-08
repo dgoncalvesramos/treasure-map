@@ -18,12 +18,12 @@
  **A - {name}  - {posX} - {posY} - {Direction} - {Movement sequence}**
 	
    indicates that we define an adventurer at the coordinates **{posX}** - **{posY}** with the start **{direction}**
-     and the sequence movement **{Movement sequence}**
+     and the movement sequence **{Movement sequence}**
  
 # Rules of the game
  Adventurers walk each turn following the movement sequence :
 
- - **A** walk to the next position from at the direction **{direction}** 
+ - **A** walk to the next position at the direction **{direction}** 
  - **D** turn right (switch the adventurer **{direction}**
  - **G** turn left (switch the adventurer **{direction}**)
 
@@ -57,7 +57,7 @@
  &nbsp;&nbsp;&nbsp;&nbsp;**X**&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**M**&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**X**<br/>
  **A(Lara)**&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**T(2)**&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**X**<br/>
 
- Which means that Lara has collected 3 treasures and her last direction was **S**outh.
+Adventurer Lara has collected 3 treasures and her last direction was **S**outh.
 
 # Compilation on UNIX or MAC
 `$ ./compilation.sh` in the root folder
